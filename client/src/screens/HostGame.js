@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ConnectionDot } from '../components/UI';
 import './HostGame.css';
 
@@ -7,22 +7,18 @@ const ROLE_ORDER = ['Captain', 'Person 1', 'Person 2', 'Person 3'];
 function useTimer() {
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef(Date.now());
-  const rafRef = useRef(null);
-
-  const tick = useCallback(() => {
-    setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
-    rafRef.current = requestAnimationFrame(tick);
-  }, []);
 
   useEffect(() => {
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [tick]);
+    const interval = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const reset = useCallback(() => {
+  const reset = () => {
     startRef.current = Date.now();
     setElapsed(0);
-  }, []);
+  };
 
   return { elapsed, reset };
 }
@@ -75,9 +71,7 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
         </div>
         <div className="hg-score-divider">
           <div className="hg-timer">{formatTime(elapsed)}</div>
-          <button className="hg-reset-scores" onClick={onResetScores} title="Reset scores to 0">
-            Reset scores
-          </button>
+          <button className="hg-reset-scores" onClick={onResetScores}>Reset scores</button>
         </div>
         <div className="hg-score-side blue">
           <div className="hg-score-label">Blue Team</div>
