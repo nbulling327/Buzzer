@@ -11,7 +11,7 @@ export default function App() {
   const [screen, setScreen] = useState('landing'); // landing | join-setup | host-lobby | player-game | host-game
   const [roomCode, setRoomCode] = useState('');
   const [myPlayer, setMyPlayer] = useState(null); // { name, team, role, id }
-  const [roomState, setRoomState] = useState({ players: [], buzzedIn: null, locked: false });
+  const [roomState, setRoomState] = useState({ players: [], buzzedIn: null, locked: false, scores: { red: 0, blue: 0 } });
   const [error, setError] = useState('');
   const [connected, setConnected] = useState(false);
   const socketRef = useRef(null);
@@ -107,6 +107,16 @@ export default function App() {
     });
   }, []);
 
+  const handleScore = useCallback((type) => {
+    const socket = socketRef.current;
+    socket.emit('host:score', { type }, () => {});
+  }, []);
+
+  const handleResetScores = useCallback(() => {
+    const socket = socketRef.current;
+    socket.emit('host:resetScores', () => {});
+  }, []);
+
   const handleReset = useCallback(() => {
     const socket = socketRef.current;
     socket.emit('host:reset', () => {});
@@ -138,6 +148,8 @@ export default function App() {
     onPlayerJoin: handlePlayerJoin,
     onBuzz: handleBuzz,
     onReset: handleReset,
+    onScore: handleScore,
+    onResetScores: handleResetScores,
     onKick: handleKick,
     onStartGame: handleStartGame,
     onLeave: handleLeave,
