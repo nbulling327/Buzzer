@@ -1,0 +1,188 @@
+.join-setup {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.join-setup-content {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.join-setup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.join-room-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border-bright);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+  width: fit-content;
+}
+.join-room-badge span {
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 2px;
+}
+
+.join-setup-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.setup-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setup-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.setup-name-input {
+  background: var(--bg3);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+  padding: 14px 16px;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+.setup-name-input:focus { border-color: var(--blue); }
+.setup-name-input::placeholder { color: rgba(240,240,248,0.2); font-weight: 400; }
+
+.team-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.team-btn {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.15s;
+}
+.team-btn:hover { border-color: var(--border-bright); color: var(--text); }
+.team-btn.team-red.selected {
+  background: rgba(255,45,45,0.12);
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 20px rgba(255,45,45,0.15);
+}
+.team-btn.team-blue.selected {
+  background: rgba(45,143,255,0.12);
+  border-color: var(--blue);
+  color: var(--blue);
+  box-shadow: 0 0 20px rgba(45,143,255,0.15);
+}
+
+.team-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.team-dot.red { background: var(--red); }
+.team-dot.blue { background: var(--blue); }
+
+.role-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.role-btn {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 12px;
+  position: relative;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.role-btn:hover:not(:disabled) { border-color: var(--border-bright); color: var(--text); }
+.role-btn.selected {
+  background: rgba(45,143,255,0.1);
+  border-color: var(--blue);
+  color: var(--text);
+}
+.role-btn.taken {
+  opacity: 0.38;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.role-btn:disabled { cursor: not-allowed; }
+.taken-label {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--red);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.setup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-join {
+  background: var(--blue);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 17px;
+  border-radius: var(--radius);
+  width: 100%;
+  transition: opacity 0.15s, transform 0.12s;
+  letter-spacing: 0.3px;
+}
+.btn-join:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.btn-join:active:not(:disabled) { transform: scale(0.98); }
+.btn-join:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-back-small {
+  background: none;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px;
+  text-align: center;
+  transition: color 0.15s;
+}
+.btn-back-small:hover { color: var(--text); }

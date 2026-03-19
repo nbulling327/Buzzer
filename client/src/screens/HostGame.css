@@ -1,0 +1,317 @@
+.host-game {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Header */
+.hg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.hg-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.host-badge-sm {
+  background: var(--blue);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.hg-room-code {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  color: var(--text);
+}
+
+.hg-player-count {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.hg-leave {
+  background: none;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.hg-leave:hover { color: var(--red); border-color: rgba(255,45,45,0.4); }
+
+/* Main buzz display */
+.hg-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+  padding: 32px 24px;
+}
+
+/* Waiting state */
+.hg-waiting {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hg-waiting-rings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hg-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.hg-ring-1 { width: 100px; height: 100px; animation: pulse 2s ease infinite 0s; }
+.hg-ring-2 { width: 140px; height: 140px; animation: pulse 2s ease infinite 0.5s; }
+.hg-ring-3 { width: 180px; height: 180px; animation: pulse 2s ease infinite 1s; }
+
+.hg-waiting-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+.hg-waiting-icon { font-size: 32px; opacity: 0.4; animation: pulse 2.5s ease infinite; }
+.hg-waiting-text { font-size: 15px; color: var(--text-dim); font-weight: 500; }
+
+/* Buzzed display */
+.hg-buzzed-display {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 40px 56px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--buzz-color);
+  background: var(--bg2);
+  overflow: hidden;
+  min-width: 280px;
+}
+
+.hg-buzz-glow-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, var(--buzz-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hg-buzz-team-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  z-index: 1;
+}
+
+.hg-buzz-name {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text);
+  z-index: 1;
+  line-height: 1;
+}
+
+.hg-buzz-role {
+  font-size: 16px;
+  color: var(--text-dim);
+  font-weight: 500;
+  z-index: 1;
+  margin-top: 2px;
+}
+
+/* Reset button */
+.hg-reset-area {
+  padding: 0 20px 20px;
+}
+
+.hg-reset-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+
+.hg-reset-btn.idle {
+  background: var(--bg3);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  cursor: default;
+}
+
+.hg-reset-btn.active {
+  background: linear-gradient(135deg, #1a6fd4, #2d8fff);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(45,143,255,0.3);
+}
+.hg-reset-btn.active:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(45,143,255,0.4);
+}
+.hg-reset-btn.active:active { transform: scale(0.98); }
+
+/* Team columns */
+.hg-teams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.hg-team-col {
+  padding: 16px;
+  border-right: 1px solid var(--border);
+}
+.hg-team-col:last-child { border-right: none; }
+
+.hg-team-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--col-color);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hg-team-players {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hg-player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  min-height: 44px;
+}
+
+.hg-player-row.buzzed {
+  background: rgba(45,143,255,0.08);
+  border-color: var(--col-color);
+  box-shadow: 0 0 12px rgba(45,143,255,0.1);
+}
+.hg-player-row:nth-child(1).buzzed,
+.hg-player-row:nth-child(2).buzzed,
+.hg-player-row:nth-child(3).buzzed,
+.hg-player-row:nth-child(4).buzzed {
+  /* Team color handled via JS inline style on parent */
+}
+
+.hg-player-row.empty {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border);
+  opacity: 0.4;
+}
+
+.hg-player-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--col-color);
+  flex-shrink: 0;
+  box-shadow: 0 0 5px var(--col-color);
+}
+.hg-player-dot.empty-dot {
+  background: var(--border-bright);
+  box-shadow: none;
+}
+
+.hg-player-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.hg-player-name {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hg-player-role {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.hg-empty-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.hg-buzzed-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--col-color);
+  background: rgba(45,143,255,0.12);
+  border: 1px solid var(--col-color);
+  border-radius: 10px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+.hg-kick-btn {
+  background: none;
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 3px 5px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.hg-player-row:hover .hg-kick-btn { opacity: 1; }
+.hg-kick-btn:hover { color: var(--red); background: rgba(255,45,45,0.1); }

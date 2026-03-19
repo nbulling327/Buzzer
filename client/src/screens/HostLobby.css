@@ -1,0 +1,135 @@
+.host-lobby {
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+  padding-top: 48px;
+}
+
+.host-lobby-content {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.host-lobby-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.host-badge {
+  display: inline-flex;
+  background: var(--blue);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.host-lobby-header h1 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.player-count {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.share-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 10px 16px;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  border: 1px dashed var(--border-bright);
+}
+
+.players-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.players-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.waiting-hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--text-dim);
+  border: 1px dashed var(--border);
+}
+
+.waiting-anim {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border-bright);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.host-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.btn-start {
+  background: linear-gradient(135deg, #1a6fd4, #2d8fff);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 17px;
+  border-radius: var(--radius);
+  width: 100%;
+  transition: opacity 0.15s, transform 0.12s;
+  letter-spacing: 0.3px;
+}
+.btn-start:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.btn-start:active:not(:disabled) { transform: scale(0.98); }
+.btn-start:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-leave {
+  background: none;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px;
+  text-align: center;
+  transition: color 0.15s;
+}
+.btn-leave:hover { color: var(--red); }
