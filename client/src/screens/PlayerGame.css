@@ -64,6 +64,48 @@
 }
 .pg-leave:hover { color: var(--text); border-color: var(--border-bright); }
 
+/* Scoreboard */
+.pg-scoreboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+
+.pg-score-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pg-score-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.pg-score-label.red { color: var(--red); }
+.pg-score-label.blue { color: var(--blue); }
+
+.pg-score-num {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.pg-score-num.red { color: var(--red); }
+.pg-score-num.blue { color: var(--blue); }
+
+.pg-score-vs {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
 /* Main area */
 .pg-main {
   position: relative;
