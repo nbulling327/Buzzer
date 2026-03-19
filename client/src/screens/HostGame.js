@@ -1,12 +1,42 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { ConnectionDot } from '../components/UI';
 import './HostGame.css';
 
 const ROLE_ORDER = ['Captain', 'Person 1', 'Person 2', 'Person 3'];
 
+function useTimer() {
+  const [elapsed, setElapsed] = useState(0);
+  const startRef = useRef(Date.now());
+  const rafRef = useRef(null);
+
+  const tick = useCallback(() => {
+    setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+    rafRef.current = requestAnimationFrame(tick);
+  }, []);
+
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [tick]);
+
+  const reset = useCallback(() => {
+    startRef.current = Date.now();
+    setElapsed(0);
+  }, []);
+
+  return { elapsed, reset };
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
 export default function HostGame({ roomCode, roomState, onReset, onScore, onResetScores, onKick, onLeave, connected }) {
   const { players = [], buzzedIn, locked, scores = { red: 0, blue: 0 } } = roomState;
   const prevLocked = useRef(false);
+  const { elapsed, reset: resetTimer } = useTimer();
 
   const redPlayers = ROLE_ORDER
     .map(role => players.find(p => p.team === 'red' && p.role === role))
@@ -19,13 +49,15 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
     prevLocked.current = locked;
   }, [locked]);
 
+  const handleReset = () => { resetTimer(); onReset(); };
+  const handleScore = (type) => { resetTimer(); onScore(type); };
+
   const buzzColor = buzzedIn?.team === 'red' ? 'var(--red)' : 'var(--blue)';
   const buzzGlow = buzzedIn?.team === 'red' ? 'var(--red-glow)' : 'var(--blue-glow)';
 
   return (
     <div className="host-game">
 
-      {/* Header bar */}
       <div className="hg-header fade-in">
         <div className="hg-header-left">
           <div className="host-badge-sm">HOST</div>
@@ -36,13 +68,13 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
         <button className="hg-leave" onClick={onLeave}>End Session</button>
       </div>
 
-      {/* Scoreboard */}
       <div className="hg-scoreboard fade-in">
         <div className="hg-score-side red">
           <div className="hg-score-label">Red Team</div>
           <div className="hg-score-value red">{scores.red}</div>
         </div>
         <div className="hg-score-divider">
+          <div className="hg-timer">{formatTime(elapsed)}</div>
           <button className="hg-reset-scores" onClick={onResetScores} title="Reset scores to 0">
             Reset scores
           </button>
@@ -53,7 +85,6 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
         </div>
       </div>
 
-      {/* Main buzz display */}
       <div className="hg-main fade-in">
         {!locked ? (
           <div className="hg-waiting">
@@ -68,10 +99,7 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
             </div>
           </div>
         ) : (
-          <div
-            className="hg-buzzed-display scale-in"
-            style={{ '--buzz-color': buzzColor, '--buzz-glow': buzzGlow }}
-          >
+          <div className="hg-buzzed-display scale-in" style={{ '--buzz-color': buzzColor, '--buzz-glow': buzzGlow }}>
             <div className="hg-buzz-glow-bg" />
             <div className="hg-buzz-team-tag" style={{ color: buzzColor }}>
               {buzzedIn?.team === 'red' ? '🔴 Red Team' : '🔵 Blue Team'}
@@ -82,51 +110,35 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
         )}
       </div>
 
-      {/* Scoring buttons — only show after buzz */}
       {locked ? (
         <div className="hg-score-actions fade-in">
           <div className="hg-score-btns">
-            <button className="hg-score-btn tossup" onClick={() => onScore('tossup')}>
+            <button className="hg-score-btn tossup" onClick={() => handleScore('tossup')}>
               <span className="hg-score-btn-pts">+4</span>
               <span className="hg-score-btn-label">Tossup</span>
             </button>
-            <button className="hg-score-btn interrupt" onClick={() => onScore('interrupt')}>
+            <button className="hg-score-btn blurp" onClick={() => handleScore('blurp')}>
               <span className="hg-score-btn-pts">−4</span>
-              <span className="hg-score-btn-label">interrupt</span>
+              <span className="hg-score-btn-label">Blurp</span>
             </button>
-            <button className="hg-score-btn bonus" onClick={() => onScore('bonus')}>
+            <button className="hg-score-btn bonus" onClick={() => handleScore('bonus')}>
               <span className="hg-score-btn-pts">+10</span>
               <span className="hg-score-btn-label">Bonus</span>
             </button>
           </div>
-          <button className="hg-reset-btn active" onClick={onReset}>
+          <button className="hg-reset-btn active" onClick={handleReset}>
             ↺ Reset (no points)
           </button>
         </div>
       ) : (
         <div className="hg-reset-area fade-in">
-          <button className="hg-reset-btn idle">
-            Ready — waiting for buzz…
-          </button>
+          <button className="hg-reset-btn idle">Ready — waiting for buzz…</button>
         </div>
       )}
 
-      {/* Team columns */}
       <div className="hg-teams fade-in">
-        <TeamColumn
-          team="red"
-          label="🔴 Red Team"
-          players={redPlayers}
-          buzzedIn={buzzedIn}
-          onKick={onKick}
-        />
-        <TeamColumn
-          team="blue"
-          label="🔵 Blue Team"
-          players={bluePlayers}
-          buzzedIn={buzzedIn}
-          onKick={onKick}
-        />
+        <TeamColumn team="red" label="🔴 Red Team" players={redPlayers} buzzedIn={buzzedIn} onKick={onKick} />
+        <TeamColumn team="blue" label="🔵 Blue Team" players={bluePlayers} buzzedIn={buzzedIn} onKick={onKick} />
       </div>
     </div>
   );
@@ -135,7 +147,6 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
 function TeamColumn({ team, label, players, buzzedIn, onKick }) {
   const color = team === 'red' ? 'var(--red)' : 'var(--blue)';
   const emptySlots = 4 - players.length;
-
   return (
     <div className="hg-team-col" style={{ '--col-color': color }}>
       <div className="hg-team-label">{label}</div>
