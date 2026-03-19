@@ -15,7 +15,7 @@ const io = new Server(server, {
   }
 });
 
-// rooms: { [roomCode]: { host: socketId, players: { [socketId]: player }, buzzedIn: player | null, locked: bool } }
+// rooms: { [roomCode]: { host: socketId, players: { [socketId]: player }, buzzedIn: player | null, locked: bool, scores: { red: number, blue: number } } }
 const rooms = {};
 
 function generateRoomCode() {
@@ -29,7 +29,8 @@ function getRoomState(room) {
   return {
     players: Object.values(room.players),
     buzzedIn: room.buzzedIn,
-    locked: room.locked
+    locked: room.locked,
+    scores: room.scores
   };
 }
 
@@ -48,7 +49,8 @@ io.on('connection', (socket) => {
       host: socket.id,
       players: {},
       buzzedIn: null,
-      locked: false
+      locked: false,
+      scores: { red: 0, blue: 0 }
     };
 
     socket.join(code);
@@ -127,6 +129,42 @@ io.on('connection', (socket) => {
     io.to(code).emit('room:update', getRoomState(room));
 
     console.log(`Room ${code} reset`);
+    callback && callback({ success: true });
+  });
+
+  // HOST: award points
+  // type: 'tossup' (+4 to buzzed team), 'blurp' (-4 to buzzed team), 'bonus' (+10 to buzzed team)
+  socket.on('host:score', ({ type }, callback) => {
+    const code = socket.data.roomCode;
+    const room = rooms[code];
+    if (!room) return callback && callback({ success: false });
+    if (room.host !== socket.id) return callback && callback({ success: false, error: 'Not the host' });
+    if (!room.buzzedIn) return callback && callback({ success: false, error: 'Nobody buzzed in' });
+
+    const team = room.buzzedIn.team;
+    const delta = type === 'tossup' ? 4 : type === 'blurp' ? -4 : type === 'bonus' ? 10 : 0;
+    if (delta === 0) return callback && callback({ success: false, error: 'Unknown score type' });
+
+    room.scores[team] = (room.scores[team] || 0) + delta;
+
+    // Reset buzzer after scoring
+    room.locked = false;
+    room.buzzedIn = null;
+
+    io.to(code).emit('room:reset');
+    io.to(code).emit('room:update', getRoomState(room));
+
+    console.log(`Room ${code}: ${team} ${delta > 0 ? '+' : ''}${delta} (${type})`);
+    callback && callback({ success: true, scores: room.scores });
+  });
+
+  // HOST: reset scores
+  socket.on('host:resetScores', (callback) => {
+    const code = socket.data.roomCode;
+    const room = rooms[code];
+    if (!room || room.host !== socket.id) return;
+    room.scores = { red: 0, blue: 0 };
+    io.to(code).emit('room:update', getRoomState(room));
     callback && callback({ success: true });
   });
 
