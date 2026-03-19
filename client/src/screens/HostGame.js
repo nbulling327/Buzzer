@@ -90,9 +90,9 @@ export default function HostGame({ roomCode, roomState, onReset, onScore, onRese
               <span className="hg-score-btn-pts">+4</span>
               <span className="hg-score-btn-label">Tossup</span>
             </button>
-            <button className="hg-score-btn blurp" onClick={() => onScore('blurp')}>
+            <button className="hg-score-btn interrupt" onClick={() => onScore('interrupt')}>
               <span className="hg-score-btn-pts">−4</span>
-              <span className="hg-score-btn-label">Blurp</span>
+              <span className="hg-score-btn-label">interrupt</span>
             </button>
             <button className="hg-score-btn bonus" onClick={() => onScore('bonus')}>
               <span className="hg-score-btn-pts">+10</span>
