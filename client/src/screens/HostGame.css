@@ -197,6 +197,20 @@
   gap: 6px;
 }
 
+.hg-timer {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--text);
+  background: var(--bg3);
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  padding: 4px 14px;
+  min-width: 80px;
+  text-align: center;
+}
+
 .hg-reset-scores {
   background: none;
   color: var(--text-dim);
@@ -264,12 +278,12 @@
   box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
 }
 
-.hg-score-btn.interrupt {
+.hg-score-btn.blurp {
   background: rgba(255, 45, 45, 0.12);
   border-color: rgba(255, 45, 45, 0.4);
   color: var(--red);
 }
-.hg-score-btn.interrupt:hover {
+.hg-score-btn.blurp:hover {
   background: rgba(255, 45, 45, 0.22);
   border-color: var(--red);
   transform: translateY(-2px);
