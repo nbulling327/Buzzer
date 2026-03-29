@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import './PlayerGame.css';
 
 export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
-  const { buzzedIn, locked, scores = { red: 0, blue: 0 } } = roomState;
+  const { buzzedIn, locked, buzzerOpen, scores = { red: 0, blue: 0 } } = roomState;
   const players = roomState.players || [];
 
   const iMe = myPlayer;
   const buzzedMe = buzzedIn && buzzedIn.id === iMe?.id;
-  const canBuzz = !locked;
+  const canBuzz = buzzerOpen && !locked;
 
   const teamColor = iMe?.team === 'red' ? 'var(--red)' : 'var(--blue)';
   const teamColorGlow = iMe?.team === 'red' ? 'var(--red-glow)' : 'var(--blue-glow)';
@@ -16,9 +16,7 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
   const [ripple, setRipple] = useState(false);
   const rippleTimer = useRef(null);
 
-  useEffect(() => {
-    return () => clearTimeout(rippleTimer.current);
-  }, []);
+  useEffect(() => { return () => clearTimeout(rippleTimer.current); }, []);
 
   const handleBuzz = () => {
     if (!canBuzz) return;
@@ -30,10 +28,23 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
   const redPlayers = players.filter(p => p.team === 'red');
   const bluePlayers = players.filter(p => p.team === 'blue');
 
+  const statusText = () => {
+    if (!buzzerOpen && !locked) return 'Waiting for host to open buzzer…';
+    if (canBuzz) return 'Tap to buzz in';
+    if (buzzedMe) return 'You got it!';
+    return `${buzzedIn?.name} was first`;
+  };
+
+  const btnLabel = () => {
+    if (!buzzerOpen && !locked) return '⏸';
+    if (canBuzz) return 'BUZZ';
+    if (buzzedMe) return '✓';
+    return '—';
+  };
+
   return (
     <div className="player-game" style={{ '--team-color': teamColor, '--team-glow': teamColorGlow }}>
 
-      {/* Top bar */}
       <div className="pg-topbar">
         <div className="pg-identity">
           <div className="pg-team-dot" />
@@ -45,7 +56,6 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
         <button className="pg-leave" onClick={onLeave}>Leave</button>
       </div>
 
-      {/* Live scoreboard */}
       <div className="pg-scoreboard">
         <div className="pg-score-side">
           <div className="pg-score-label red">Red</div>
@@ -58,9 +68,7 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
         </div>
       </div>
 
-      {/* Main area */}
       <div className="pg-main">
-
         {locked && (
           <div className={`buzz-banner ${buzzedMe ? 'buzz-me' : 'buzz-other'} scale-in`}>
             {buzzedMe ? (
@@ -78,8 +86,7 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
                   <div className="buzz-banner-title">
                     <span style={{ color: buzzedIn?.team === 'red' ? 'var(--red)' : 'var(--blue)' }}>
                       {buzzedIn?.name}
-                    </span>
-                    {' '}buzzed in
+                    </span>{' '}buzzed in
                   </div>
                   <div className="buzz-banner-sub">
                     {buzzedIn?.role} · {buzzedIn?.team === 'red' ? 'Red' : 'Blue'} Team
@@ -94,22 +101,17 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
           {ripple && <div className="buzzer-ripple" />}
           {canBuzz && <div className="buzzer-pulse-ring" />}
           <button
-            className={`buzzer-btn ${canBuzz ? 'ready' : locked && buzzedMe ? 'buzzed-me' : 'buzzed-other'}`}
+            className={`buzzer-btn ${canBuzz ? 'ready' : locked && buzzedMe ? 'buzzed-me' : !buzzerOpen ? 'closed' : 'buzzed-other'}`}
             onClick={handleBuzz}
             disabled={!canBuzz}
           >
-            <span className="buzzer-label">
-              {canBuzz ? 'BUZZ' : buzzedMe ? '✓' : '—'}
-            </span>
+            <span className="buzzer-label">{btnLabel()}</span>
           </button>
         </div>
 
-        <div className="buzzer-status">
-          {canBuzz ? 'Tap to buzz in' : buzzedMe ? 'You got it!' : `${buzzedIn?.name} was first`}
-        </div>
+        <div className="buzzer-status">{statusText()}</div>
       </div>
 
-      {/* Team roster footer */}
       <div className="pg-roster">
         <div className="pg-roster-team red">
           {redPlayers.map(p => (
@@ -131,7 +133,6 @@ export default function PlayerGame({ myPlayer, roomState, onBuzz, onLeave }) {
           ))}
         </div>
       </div>
-
     </div>
   );
 }
