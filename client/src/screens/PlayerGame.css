@@ -302,3 +302,10 @@
   border-radius: 10px;
   padding: 1px 6px;
 }
+
+.buzzer-btn.closed {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  cursor: not-allowed;
+  opacity: 0.35;
+}
